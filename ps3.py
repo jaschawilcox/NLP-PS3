@@ -18,7 +18,8 @@ markupTokens = {'{sl}', 'sp', '{ls}', '{lg}', '{cg}', '{ns}',
                 '{br}', '*', '[', ']'}
 
 # List of question words used to detect a question phrase
-questionWords = {'why', 'what', 'how', 'when' ,'where', 'is', 'do'}
+questionWords = {'why', 'what', 'how', 'when' ,'where', 'is', 'do',
+                 'what\'s'}
 
 full_set = []
 for file in files:
@@ -62,6 +63,9 @@ for line in full_set:
         if q in firstThreeWords:
             trainResults[i] = 'Q'
             break
+        
+    if (len(currentPhrase.split()) > 20):
+        trainResults[i] = 'A'
         
     i += 1
 
