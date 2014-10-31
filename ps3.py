@@ -7,17 +7,18 @@ Created on Wed Oct 29 17:29:53 2014
 import os
 import csv
 
-path = './PS3_dev/'
+path = './data/' # Path to csv files
 ratio = 0.80
 
 files = os.listdir(path)
+files = [f for f in files if f.find('.csv') > 0]
 
 # List of tokens that can be removed for first task
 markupTokens = {'{sl}', 'sp', '{ls}', '{lg}', '{cg}', '{ns}',
                 '{br}', '*', '[', ']'}
 
 # List of question words used to detect a question phrase
-questionWords = {'why', 'what', 'how', 'when' ,'where', 'is'}
+questionWords = {'why', 'what', 'how', 'when' ,'where', 'is', 'do'}
 
 full_set = []
 for file in files:
@@ -38,7 +39,7 @@ trainResults = []
 i = 0
 
 # First task: decide on question/answer
-for line in train_set:
+for line in full_set:
     
     currentPhrase = line[5]
     
@@ -50,7 +51,7 @@ for line in train_set:
     cleanedTrain.append(currentPhrase)
             
     firstThreeWords = currentPhrase.split()[:3]
-    print firstThreeWords
+#    print firstThreeWords
     
     # Assume the current line is an answer
     trainResults.append('A')
@@ -67,9 +68,11 @@ for line in train_set:
 numCorrect = 0
 
 for i in range(len(trainResults)):
-    if trainResults[i] == train_set[i][3]:
+    if trainResults[i] == full_set[i][3]:
         #print train_set[i][5] + trainResults[i]
         numCorrect += 1
+    else:
+        print full_set[i]
 
 print str(numCorrect) + " correct assignments"
-print str((float(numCorrect)/len(train_set)) * 100) + "% accuracy"
+print str((float(numCorrect)/len(full_set)) * 100) + "% accuracy"
