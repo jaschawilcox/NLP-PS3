@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Oct 29 17:29:53 2014
-@author: jascha, tasso
+@author: jascha, tasso, aditya
 """
 
 import os
@@ -78,5 +78,5 @@ for i in range(len(trainResults)):
     else:
         print full_set[i]
 
-print str(numCorrect) + " correct assignments"
+print str(numCorrect) + " Questions Answers Correctly Classified"
 print str((float(numCorrect)/len(full_set)) * 100) + "% accuracy"
