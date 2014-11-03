@@ -7,7 +7,7 @@ Created on Wed Oct 29 17:29:53 2014
 import os
 import csv
 
-path = './data/' # Path to csv files
+path = 'C://Users//ad1154//Dropbox//NLP_Ps3//PS3_dev//NLP-PS3//data//' # Path to csv files
 ratio = 0.80
 
 files = os.listdir(path)
