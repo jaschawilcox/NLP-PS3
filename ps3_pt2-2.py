@@ -164,8 +164,9 @@ print str((float(numCorrect)/len(finalTestSet)) * 100) + "% accuracy"
 ############# Beginning of E/M classification #################
 for line in train_set:
     
-    #currentTrainFeature = line[5]
-    currentTrainFeature = ' '.join((line[0], line[1], line[2], line[5]))
+    currentTrainFeature = line[5]
+    #currentTrainFeature = ' '.join((line[0], line[1], line[2], line[5]))
+    #currentTrainFeature = ' '.join((line[0], line[2], line[5]))
     currentTrainGT = line[4]
     X_train.append(currentTrainFeature)
     y_train.append(currentTrainGT)
@@ -180,7 +181,9 @@ for line in test_set:
     
 for line in finalTestSet:
     
-    currentFTestFeature = ' '.join((line[0], line[1], line[2], line[5]))
+    currentFTestFeature = line[5]
+    #currentFTestFeature = ' '.join((line[0], line[1], line[2], line[5]))
+    #currentFTestFeature = ' '.join((line[0], line[2], line[5]))
     currentFTestGT = line[4]
     finalTest.append(currentFTestFeature)
     finalTestTruth.append(currentFTestGT)
@@ -202,21 +205,30 @@ X_test = vectorizer.transform(X_test)
 finalTest = vectorizer.transform(finalTest)
 nb_classifier = MultinomialNB().fit(X_train, y_train)
 
+'''
 #Multinomial Naive Bayes
 y_nb_predicted = nb_classifier.predict(X_test)
 finalNBPredicted = nb_classifier.predict(finalTest)
+'''
 
+'''
 # SVM
 from sklearn.svm import LinearSVC
 svm_classifier = LinearSVC().fit(X_train, y_train)
 y_svm_predicted = svm_classifier.predict(X_test)   
-finalSVMPredicted = svm_classifier.predict(finalTest) 
+finalSVMPredicted = svm_classifier.predict(finalTest)
+'''
+from sklearn.svm import SVC
+linear_svc = SVC(kernel='linear')
+finalSVCPredicted = linear_svc.fit(X_train, y_train).predict(finalTest) 
 
+'''
 # Logistic Regression
 from sklearn.linear_model import LogisticRegression
 maxent_classifier = LogisticRegression().fit(X_train, y_train)
 y_maxent_predicted = maxent_classifier.predict(X_test)
 finalMaxEntPredicted = maxent_classifier.predict(finalTest)
+'''
 
 #y_train = np.array([el for el in nyt_labels[0:trainset_size]])
 #
@@ -231,6 +243,7 @@ j = 0
 for truth in finalTestTruth:
     numM = 0
     numE = 0
+    '''
     currentPredictions = [finalNBPredicted[j], finalSVMPredicted[j],
                    finalMaxEntPredicted[j]]
     for prediction in currentPredictions:
@@ -240,7 +253,8 @@ for truth in finalTestTruth:
     if numM > 1:
         bestPrediction = 'M'
     else: bestPrediction = 'E'
-    bestPrediction = finalSVMPredicted[j]
+    '''
+    bestPrediction = finalSVCPredicted[j]
     finalEMResults.append(bestPrediction)
     
     #print currentPredictions, bestPrediction
