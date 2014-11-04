@@ -20,7 +20,7 @@ import csv
 #from operator import itemgetter
 #import re
 
-path = './data/' # Path to csv files
+path = './data/' # Path to developer csv files
 testPath = './testdata/' # Path to final test csv files
 ratio = 0.80
 
@@ -106,19 +106,19 @@ for line in full_set:
         
     i += 1
 
-numCorrect = 0
+#numCorrect = 0
 
 # Determine correctness in training set by comparing answer array
 # with actual values from file
-for i in range(len(trainResults)):
-    if trainResults[i] == full_set[i][3]:
+#for i in range(len(trainResults)):
+#    if trainResults[i] == full_set[i][3]:
         #print train_set[i][5] + trainResults[i]
-        numCorrect += 1
-    else:
-        print full_set[i]
+#        numCorrect += 1
+#    else:
+#        print full_set[i]
 
-print str(numCorrect) + " correct assignments"
-print str((float(numCorrect)/len(full_set)) * 100) + "% accuracy"
+#print str(numCorrect) + " Question/Answer Correctly Classified"
+#print str((float(numCorrect)/len(full_set)) * 100) + "% accuracy"
 
 i = 0
 
@@ -148,6 +148,18 @@ for line in finalTestSet:
         finalQAResults[i] = 'A'
         
     i += 1
+    
+numCorrect = 0
+
+for i in range(len(finalQAResults)):
+    if finalQAResults[i] == finalTestSet[i][3]:
+        #print train_set[i][5] + trainResults[i]
+        numCorrect += 1
+    else:
+        print finalTestSet[i]
+
+print str(numCorrect) + " Question/Answer Correctly Classified"
+print str((float(numCorrect)/len(finalTestSet)) * 100) + "% accuracy"
 
 ############# Beginning of E/M classification #################
 for line in train_set:
@@ -194,8 +206,6 @@ nb_classifier = MultinomialNB().fit(X_train, y_train)
 y_nb_predicted = nb_classifier.predict(X_test)
 finalNBPredicted = nb_classifier.predict(finalTest)
 
-
-    
 # SVM
 from sklearn.svm import LinearSVC
 svm_classifier = LinearSVC().fit(X_train, y_train)
@@ -203,14 +213,11 @@ y_svm_predicted = svm_classifier.predict(X_test)
 finalSVMPredicted = svm_classifier.predict(finalTest) 
 
 # Logistic Regression
-
 from sklearn.linear_model import LogisticRegression
 maxent_classifier = LogisticRegression().fit(X_train, y_train)
 y_maxent_predicted = maxent_classifier.predict(X_test)
 finalMaxEntPredicted = maxent_classifier.predict(finalTest)
 
-
-    
 #y_train = np.array([el for el in nyt_labels[0:trainset_size]])
 #
 #X_test = np.array([''.join(el) for el in nyt_data[trainset_size+1:len(nyt_data)]]) 
@@ -218,6 +225,7 @@ finalMaxEntPredicted = maxent_classifier.predict(finalTest)
 
 # Get the majority prediction from the 3 classifiers above for each line
 # and use it as the classification
+
 j = 0
 
 for truth in finalTestTruth:
@@ -232,11 +240,22 @@ for truth in finalTestTruth:
     if numM > 1:
         bestPrediction = 'M'
     else: bestPrediction = 'E'
+    bestPrediction = finalSVMPredicted[j]
     finalEMResults.append(bestPrediction)
     
     #print currentPredictions, bestPrediction
     j += 1
-
+    
+emcor = 0
+for i, r in enumerate(finalEMResults):
+    if finalEMResults[i] == finalTestSet[i][4]:
+        emcor += 1
+    #else: print str(i) + ": " + finalEMResults[i] + " " + finalTestSet[i][4]
+    
+#print "Test set: " + str(len(finalTestSet))
+print str(emcor) + " Emotional/Material Correctly Classified"
+print str((float(emcor)/len(finalTestSet)) * 100) + "% accuracy"
+    
 # Write results out to a .csv file in the same format as input
 if not os.path.exists('./result/'):
     os.makedirs('./result/')
